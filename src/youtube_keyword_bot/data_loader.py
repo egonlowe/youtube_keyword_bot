@@ -1,17 +1,23 @@
 import csv
+from pathlib import Path
 
 class VideoEntry:
     def __init__(self, title, categories, keywords):
         self.title = title
-        self.categories = categories      # list of categories
-        self.keywords = keywords          # list of keywords
+        self.categories = categories
+        self.keywords = keywords
 
     def __repr__(self):
-        return f"VideoEntry(title={self.title}, categories={self.categories}, keywords={self.keywords[:5]}...)"
+        return f"VideoEntry(title={self.title}, categories={self.categories}, keywords={len(self.keywords)} kws)"
+
 
 class DataLoader:
-    def __init__(self, csv_path):
-        self.csv_path = csv_path
+    def __init__(self, csv_path: str):
+        # Step 1: go from data_loader.py → youtube_keyword_bot/ → src/ → project root
+        project_root = Path(__file__).resolve().parent.parent.parent
+
+        # Step 2: build full path to CSV inside /data/
+        self.csv_path = (project_root / csv_path).resolve()
 
     def load_dataset(self):
         entries = []
