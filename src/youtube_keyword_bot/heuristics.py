@@ -104,6 +104,54 @@ class Heuristics:
         return 0.0
 
     # ---------------------------------------------------------
+    # TITLE-AWARE KEYWORD POOL FILTERING
+    # ---------------------------------------------------------
+    def filter_pool_by_title(self, pool, input_title, sim_threshold=0.25):
+        """
+        Filter a raw keyword pool using the input title:
+        • Keep keywords that are semantically similar enough to the title, OR
+        • Share at least one lemma/token with the title
+        This helps remove obviously off-topic or noisy tags before GA.
+        """
+        filtered = []
+
+        doc_title = self.tp.nlp(input_title)
+        title_tokens = {
+            t.lemma_.lower()
+            for t in doc_title
+            if not t.is_punct and not t.is_space
+        }
+
+        for kw in pool:
+            kw = kw.strip()
+            if not kw:
+                continue
+
+            kw_doc = self.tp.nlp(kw)
+            if not kw_doc:
+                continue
+
+            # semantic similarity
+            sim = 0.0
+            if kw_doc[0].has_vector and doc_title.vector.any():
+                sim = doc_title.similarity(kw_doc)
+            if sim < 0:
+                sim = 0.0
+
+            # lexical overlap (shared lemma)
+            kw_tokens = {
+                t.lemma_.lower()
+                for t in kw_doc
+                if not t.is_punct and not t.is_space
+            }
+            overlap = bool(title_tokens & kw_tokens)
+
+            if sim >= sim_threshold or overlap:
+                filtered.append(kw)
+
+        return filtered
+
+    # ---------------------------------------------------------
     # BUILD KEYWORD POOL
     # ---------------------------------------------------------
     def build_keyword_pool(self, scored_list, top_n=10, max_pool_size=200):
