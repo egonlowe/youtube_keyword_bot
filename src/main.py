@@ -6,7 +6,7 @@ from youtube_keyword_bot.keyword_bot import KeywordBot
 
 
 def test_data_loader():
-    loader = DataLoader("data/ai_dataset.csv")
+    loader = DataLoader("data/updatedDataSet.csv")
     dataset = loader.load_dataset()
 
     print(f"Loaded {len(dataset)} entries.")
@@ -31,7 +31,7 @@ def test_heuristics():
     print("\n--- Running Heuristics Test ---")
 
     # 1. Load dataset
-    loader = DataLoader("data/ai_dataset.csv")
+    loader = DataLoader("data/updatedDataSet.csv")
     dataset = loader.load_dataset()
 
     # 2. Initialize helpers
@@ -132,7 +132,7 @@ def run_cli():
       - print results + character count
     """
     # Load dataset and bot once
-    loader = DataLoader("data/ai_dataset.csv")
+    loader = DataLoader("data/updatedDataSet.csv")
     dataset = loader.load_dataset()
     bot = KeywordBot(dataset)
 
