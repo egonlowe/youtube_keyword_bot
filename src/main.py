@@ -1,3 +1,5 @@
+# Main Class w/ test cases
+
 from youtube_keyword_bot.data_loader import DataLoader
 from youtube_keyword_bot.text_processing import TextProcessing
 from youtube_keyword_bot.heuristics import Heuristics
